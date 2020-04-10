@@ -41,7 +41,7 @@ public class MapManager : Singleton<MapManager>
 
     public void SetPathFindNumPerFrame(int num)
     {
-        m_PathFindNumPerFrame = num;
+        m_PathFindNumPerFrame = num;    
     }
 
     public void SetMapSize(int width, int height, float gridSize = 1)
