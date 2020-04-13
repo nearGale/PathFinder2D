@@ -7,13 +7,21 @@ public class FollowController : SceneObjController
     public Transform FollowTarget;
     private SceneObjController followTargetController;
 
-    public float FollowDistance;
-
-    public float MoveSpeed { get { return m_MoveSpeed; } }
-    private float m_MoveSpeed;
+    public float MoveSpeed_Max { get { return m_MoveSpeed_Max; } }
+    private float m_MoveSpeed_Max;
 
     private List<int> m_Path = new List<int>();
     private WalkState m_State;
+
+    private Vector2 m_CurrentVelocity;
+    private Vector2 m_Steering;
+
+    private float m_ForceSteer_Max;
+
+    private float m_TempMass;
+
+    public float m_StopRadius;
+    private float m_SlowingRadius;
 
     protected override void OnStart()
     {
@@ -21,7 +29,14 @@ public class FollowController : SceneObjController
 
         followTargetController = FollowTarget.GetComponent<SceneObjController>();
 
-        m_MoveSpeed = 0.2f;
+        m_MoveSpeed_Max = 0.5f;
+        m_ForceSteer_Max = 1f;
+
+        m_StopRadius = 0.5f;
+        m_SlowingRadius = 1f;
+
+        m_CurrentVelocity = Vector2.zero;
+        m_TempMass = 1;
     }
 
     protected override void OnUpdate()
@@ -30,26 +45,38 @@ public class FollowController : SceneObjController
 
         if (Input.GetKey(KeyCode.G))
         {
-            DoFindPath();
-            DoFollow();
+            CalFollowPath();
+
+            if (!CheckNeedFollow() || m_Path == null)
+            {
+                return;
+            }
+
+            Vector2 desiredVelocity = CalDesiredVelocity();
+            
+            Vector2 finalVelocity = AddSteering(desiredVelocity, m_CurrentVelocity);
+            
+            transform.Translate(finalVelocity);
+            
+            m_CurrentVelocity = finalVelocity;
+
+            Debug.Log($"finalVelocity: {finalVelocity}     transform:{transform.position}");
         }
     }
 
-    public void DoFollow()
+    private void CalFollowPath()
     {
-        bool needFollow = CheckNeedFollow();
+        MapManager.Instance.PathFinder.FindPathRequest(CurrentCellId, followTargetController.CurrentCellId, PathFindAlg.Astar, SetPath);
+    }
 
-        if (!needFollow)
-        {
-            return;
-        }
-
-        if(m_Path == null)
-        {
-            return;
-        }
-
+    private Vector2 CalDesiredVelocity()
+    {
         int idx = m_Path.IndexOf(m_CurrentCellId);
+
+        if(idx == -1)
+        {
+            return Vector2.zero;
+        }
 
         for(int i = idx; i >= 0; i--)
         {
@@ -58,14 +85,40 @@ public class FollowController : SceneObjController
 
         if(m_Path.Count == 0)
         {
-            return;
+            return Vector2.zero;
         }
 
         var targetPos = CellManager.Instance.GetCellByID(m_Path[0]).transform.position;
 
-        var moveDir = (targetPos - transform.position).normalized * m_MoveSpeed;
+        Vector2 desiredVelocity = targetPos - transform.position;
 
-        transform.Translate(moveDir);
+        if(desiredVelocity.magnitude < m_SlowingRadius)
+        {
+            desiredVelocity = desiredVelocity.normalized * m_MoveSpeed_Max * ((desiredVelocity.magnitude - m_SlowingRadius) / (m_SlowingRadius - m_SlowingRadius));
+        }
+        else
+        {
+            desiredVelocity = desiredVelocity.normalized * m_MoveSpeed_Max;
+        }
+
+        return targetPos - transform.position;
+    }
+
+    private Vector2 AddSteering(Vector2 desiredVelocity, Vector2 currentVelocity)
+    {
+        Vector2 steeringForce = desiredVelocity - currentVelocity;
+        
+        VectorHandler.Truncate(ref steeringForce, m_ForceSteer_Max);
+
+        Vector2 steeringVector = steeringForce / m_TempMass;
+
+
+
+        Vector2 moveDir = m_CurrentVelocity + steeringVector;
+
+        VectorHandler.Truncate(ref moveDir, m_MoveSpeed_Max);
+
+        return moveDir;
     }
 
     private bool CheckNeedFollow()
@@ -76,7 +129,7 @@ public class FollowController : SceneObjController
         {
             if (followTargetController.CurrentCellId == m_CurrentCellId)
             {
-                if ((FollowTarget.position - transform.position).magnitude > FollowDistance)
+                if ((FollowTarget.position - transform.position).magnitude > m_StopRadius)
                 {
                     needFollow = true;
                 }
@@ -90,14 +143,10 @@ public class FollowController : SceneObjController
         return needFollow;
     }
 
-    private void DoFindPath()
-    {
-        MapManager.Instance.PathFinder.FindPathRequest(CurrentCellId, followTargetController.CurrentCellId, PathFindAlg.Astar, SetPath);
-    }
-
     private void SetPath(List<int> path)
     {
-        Debug.Log("SetPath F   " + Logger.ListToString(path) + "   " + path.Count);
+        if (!path.Contains(m_CurrentCellId))
+            return;
 
         m_Path.Clear();
         m_Path.AddRange(path);

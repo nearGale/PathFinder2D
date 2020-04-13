@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{080A4F5F-FC28-B4E3-2B6C-AFE6612B42BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -85,7 +84,9 @@
     <Compile Include="Assets\Scripts\Utils\LinkList.cs" />
     <Compile Include="Assets\Scripts\Utils\MessageManager.cs" />
     <Compile Include="Assets\Scripts\Utils\Singleton.cs" />
+    <Compile Include="Assets\Scripts\Utils\VectorHandler.cs" />
     <Compile Include="Assets\WalkController.cs" />
+    <None Include="Assets\testttt.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Program Files (x86)/Onedrive/Code/PathFinder2D/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
