@@ -61,9 +61,9 @@ public class FollowController : SceneObjController
     protected override void OnStart()
     {
         base.OnStart();
-
-        followTargetController = FollowTarget.GetComponent<SceneObjController>();
-
+        if(FollowTarget!= null){
+            followTargetController = FollowTarget.GetComponent<SceneObjController>();
+        }
         m_MoveSpeed_Max = 0.1f;
         m_ForceSteer_Max = 1f;
         m_AngleChange_Max = 50;
@@ -76,6 +76,11 @@ public class FollowController : SceneObjController
 
         m_CurrentVelocity = Vector2.zero;
         m_TempMass = 1;
+    }
+
+    public void SetFollowTarget(Transform followTarget){
+        FollowTarget = followTarget;
+        followTargetController = FollowTarget.GetComponent<SceneObjController>();
     }
 
     protected override void OnUpdate()
