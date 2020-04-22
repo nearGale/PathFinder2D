@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Application;
 using UnityEngine;
 
-public class FollowController : SceneObjController
+public class FollowController : SceneObjController, IEntity
 {
     public Transform FollowTarget;
     private SceneObjController followTargetController;
@@ -58,6 +59,9 @@ public class FollowController : SceneObjController
     /// </summary>
     private float m_CircleRadius;
 
+    private Vector2 m_Position;
+    private SteeringManager m_Steering;
+
     protected override void OnStart()
     {
         base.OnStart();
@@ -76,6 +80,7 @@ public class FollowController : SceneObjController
 
         m_CurrentVelocity = Vector2.zero;
         m_TempMass = 1;
+        m_Steering = new SteeringManager(this);
     }
 
     public void SetFollowTarget(Transform followTarget){
@@ -95,9 +100,7 @@ public class FollowController : SceneObjController
             {
                 return;
             }
-
-            Vector2 desiredVelocity = CalDesiredVelocity();
-            Vector2 finalVelocity = CalDesiredVelocity();
+            
 
             // Step 1. 平滑转向
 
@@ -113,19 +116,20 @@ public class FollowController : SceneObjController
             //finalVelocity = AddSteering(finalVelocity, wanderVector);
 
             //
+            Vector2 targetPos = GetNextTargetPos();
+            m_Steering.Seek(targetPos);
+            m_Steering.Update();
+            transform.position = m_Position;
             
-            transform.Translate(finalVelocity);
-
-            m_CurrentVelocity = finalVelocity;
-
-            if (finalVelocity.x == 0 && finalVelocity.y == 0)
+            
+            if (m_CurrentVelocity.x == 0 && m_CurrentVelocity.y == 0)
             {
                 Debug.Log($"m_CurrentCellId: {m_CurrentCellId}           path: {Logger.ListToString(m_Path)}");
             }
 
-            if (finalVelocity.magnitude == 0 && m_Path != null && m_Path.Count != 0)
+            if (m_Steering.Steering.magnitude == 0 && m_Path != null && m_Path.Count != 0)
                 Debug.LogError("11");
-            Debug.Log($"finalVelocity: {finalVelocity}     transform:{transform.position}");
+            Debug.Log($"m_CurrentVelocity: {m_Steering.Steering}     transform:{transform.position}");
         }
     }
 
@@ -135,7 +139,7 @@ public class FollowController : SceneObjController
         MapManager.Instance.PathFinder.FindPathRequest(CurrentCellId, followTargetController.CurrentCellId, PathFindAlg.Astar, SetPath);
     }
 
-    private Vector2 CalDesiredVelocity()
+    private Vector2 GetNextTargetPos()
     {
         int idx = m_Path.IndexOf(m_CurrentCellId);
 
@@ -146,18 +150,7 @@ public class FollowController : SceneObjController
 
         var targetPos = CellManager.Instance.GetCellByID(m_Path[idx + 1]).transform.position;
 
-        Vector2 desiredVelocity = targetPos - transform.position;
-
-        if(desiredVelocity.magnitude < m_SlowingRadius)
-        {
-            desiredVelocity = desiredVelocity.normalized * m_MoveSpeed_Max * ((desiredVelocity.magnitude - m_SlowingRadius) / (m_SlowingRadius - m_SlowingRadius));
-        }
-        else
-        {
-            desiredVelocity = desiredVelocity.normalized * m_MoveSpeed_Max;
-        }
-
-        return desiredVelocity;
+        return targetPos;
     }
 
     private Vector2 CalSteeringVector(Vector2 desiredVelocity, Vector2 currentVelocity)
@@ -239,4 +232,35 @@ public class FollowController : SceneObjController
         m_Path.Clear();
         m_Path.AddRange(path);
     }
+#region IEntity Interface
+    public Vector2 GetVelocity()
+    {
+        return m_CurrentVelocity;
+    }
+
+    public float GetMaxVelocity()
+    {
+        return m_MoveSpeed_Max;
+    }
+
+    public Vector2 GetPosition()
+    {
+        return m_Position;
+    }
+
+    public float GetMass()
+    {
+        return m_TempMass;
+    }
+
+    public void SetPosition(Vector2 pos)
+    {
+        m_Position = pos;
+    }
+
+    public void SetVelocity(Vector2 velocity)
+    {
+        m_CurrentVelocity = velocity;
+    }
+    #endregion
 }
