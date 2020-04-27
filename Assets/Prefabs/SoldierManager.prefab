@@ -45,5 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NumOfSoldiers: 4
   followType: 0
-  SoldierResource: {fileID: 0}
+  SoldierResource: {fileID: 7773977073357550076, guid: 9d045cd1514b1674baaa618724160c6e,
+    type: 3}
   FollowTarget: {fileID: 0}
+  PosInterval: 1
+  NumPerLine: 3

@@ -36,6 +36,7 @@ public class MapManager : Singleton<MapManager>
 
     public void Update()
     {
+        //Debug.Log($"== MapManager Update ==   m_PathFindNumPerFrame: {m_PathFindNumPerFrame}");
         PathFinder.ConductFindPath(m_PathFindNumPerFrame);
     }
 

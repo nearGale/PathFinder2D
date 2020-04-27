@@ -62,6 +62,8 @@ public class FollowController : SceneObjController, IEntity
     private Vector2 m_Position;
     private SteeringManager m_Steering;
 
+    private bool m_PathfindingRequested;
+
     protected override void OnStart()
     {
         base.OnStart();
@@ -81,6 +83,8 @@ public class FollowController : SceneObjController, IEntity
         m_CurrentVelocity = Vector2.zero;
         m_TempMass = 1;
         m_Steering = new SteeringManager(this);
+
+        m_PathfindingRequested = false;
     }
 
     public void SetFollowTarget(Transform followTarget){
@@ -135,7 +139,15 @@ public class FollowController : SceneObjController, IEntity
 
     private void CalFollowPath()
     {
-        Debug.Log($"FindPathRequest - m_CurrentCellId: {m_CurrentCellId}");
+        if (followTargetController == null)
+            return;
+
+        if (m_PathfindingRequested)
+            return;
+
+        Debug.Log($"FindPathRequest - m_CurrentCellId: {m_CurrentCellId}            m_PathfindingRequested： {m_PathfindingRequested}");
+        m_PathfindingRequested = true;
+
         MapManager.Instance.PathFinder.FindPathRequest(CurrentCellId, followTargetController.CurrentCellId, PathFindAlg.Astar, SetPath);
     }
 
@@ -225,6 +237,7 @@ public class FollowController : SceneObjController, IEntity
     private void SetPath(List<int> path)
     {
         Debug.Log($"SetPath - m_CurrentCellId: {m_CurrentCellId}          path: {Logger.ListToString(path)}");
+        m_PathfindingRequested = false;
 
         if (!path.Contains(m_CurrentCellId))
             return;
@@ -232,6 +245,7 @@ public class FollowController : SceneObjController, IEntity
         m_Path.Clear();
         m_Path.AddRange(path);
     }
+
 #region IEntity Interface
     public Vector2 GetVelocity()
     {
@@ -262,5 +276,5 @@ public class FollowController : SceneObjController, IEntity
     {
         m_CurrentVelocity = velocity;
     }
-    #endregion
+#endregion
 }

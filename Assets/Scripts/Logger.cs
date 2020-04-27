@@ -6,6 +6,9 @@ public static class Logger
 {
     public static string ListToString<T>(List<T> list, string spliter = ",")
     {
+        if (list == null)
+            return null;
+
         string str = "";
 
         int i = 0;

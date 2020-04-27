@@ -66,7 +66,7 @@ public class PathFinder {
         return true;
     }
 
-    public void FindPathRequest(int startCellId, int endCellId, PathFindAlg type, Action<List<int>> action = null)
+    public void FindPathRequest(int startCellId, int endCellId, PathFindAlg type, Action<List<int>> action)
     {
         PathFindReq req = new PathFindReq();
         req.startCellId = startCellId;
@@ -95,6 +95,7 @@ public class PathFinder {
 
         for (int i = 0; i < conductNum; i++)
         {
+            Debug.Log("Dequeue");
             PathFindReq req = m_Requests.Dequeue();
             FindPath(req);
         }
@@ -108,22 +109,27 @@ public class PathFinder {
         FindPath(req.startCellId, req.endCellId, req.type, req.action);
     }
 
-    public void FindPath(int startCellId, int endCellId, PathFindAlg type, Action<List<int>> action = null)
+    public void FindPath(int startCellId, int endCellId, PathFindAlg type, Action<List<int>> action)
     {
+        List<int> path;
+
         switch (type)
         {
             case PathFindAlg.Bfs:
-                BfsSearch(startCellId, endCellId, action);
+                path = BfsSearch(startCellId, endCellId, action);
                 break;
             case PathFindAlg.Astar:
-                AStarSearch(startCellId, endCellId, action);
+                path = AStarSearch(startCellId, endCellId, action);
                 break;
             case PathFindAlg.BeamSearch:
-                BeamSearch(startCellId, endCellId, action);
+                path = BeamSearch(startCellId, endCellId, action);
                 break;
             default:
+                path = null;
                 break;
         }
+
+        OnSearchEnd(action, path);
     }
 
     private BaseCell OnSearchStart(int startCellId)
@@ -145,11 +151,11 @@ public class PathFinder {
         return searchingCell;
     }
 
-    private void OnSearchEnd(Action<List<int>> action = null)
+    private void OnSearchEnd(Action<List<int>> action, List<int> path)
     {
         m_SearchState = SearchState.Finish;
 
-        action?.Invoke(m_Path);
+        action.Invoke(path);
     }
 
 
@@ -165,15 +171,15 @@ public class PathFinder {
 
     #region BFS
     // TODO: 路径标记有问题，非最短路径
-    private void BfsSearch(int startCellId, int endCellId, Action<List<int>> action = null)
+    private List<int> BfsSearch(int startCellId, int endCellId, Action<List<int>> action = null)
     {
         if (!CheckCanSearch(startCellId, endCellId))
-            return;
+            return null;
 
         BaseCell searchingCell = OnSearchStart(startCellId);
 
         if (searchingCell == null)
-            return;
+            return null;
 
         bool keepSearching = true;
         while (keepSearching)
@@ -210,8 +216,7 @@ public class PathFinder {
 
                     m_Path.Reverse();
 
-                    OnSearchEnd(action);
-                    return;
+                    return m_Path;
                 }
                 if (!m_CellsSearched.Contains(neighbor) && !m_CellsToSearch.Contains(neighbor))
                 {
@@ -228,19 +233,20 @@ public class PathFinder {
             searchingCell = m_CellsToSearch[0];
             m_CellsToSearch.RemoveAt(0);
         }
+        return null;
     }
     #endregion
 
     #region AStar
-    private void AStarSearch(int startCellId, int endCellId, Action<List<int>> action = null)
+    private List<int> AStarSearch(int startCellId, int endCellId, Action<List<int>> action = null)
     {
         if (!CheckCanSearch(startCellId, endCellId))
-            return;
+            return null;
 
         BaseCell searchingCell = OnSearchStart(startCellId);
 
         if (searchingCell == null)
-            return;
+            return null;
 
         bool keepSearching = true;
         while (keepSearching)
@@ -280,9 +286,7 @@ public class PathFinder {
 
                     m_Path.Reverse();
 
-                    OnSearchEnd(action);
-
-                    return;
+                    return m_Path;
                 }
             }
 
@@ -318,6 +322,7 @@ public class PathFinder {
                 newSearchingCell.GetComponent<SpriteRenderer>().color = Color.yellow;
             searchingCell = newSearchingCell;
         }
+        return null;
     }
 
     private int CalF(int targetCellID, int presentCellID) {
@@ -365,15 +370,15 @@ public class PathFinder {
     #endregion
 
     #region BeamSearch
-    private void BeamSearch(int startCellId, int endCellId, Action<List<int>> action = null)
+    private List<int> BeamSearch(int startCellId, int endCellId, Action<List<int>> action = null)
     {
         if (!CheckCanSearch(startCellId, endCellId))
-            return;
+            return null;
 
         BaseCell searchingCell = OnSearchStart(startCellId);
 
         if (searchingCell == null)
-            return;
+            return null;
 
         int openSize = m_BeamWidth;
         if (openSize <= 0)
@@ -429,9 +434,8 @@ public class PathFinder {
                     }
 
                     m_Path.Reverse();
-                    OnSearchEnd(action);
 
-                    return;
+                    return m_Path;
                 }
             }
 
@@ -474,6 +478,8 @@ public class PathFinder {
             if(needDemonstration)
                 searchingCell.GetComponent<SpriteRenderer>().color = Color.yellow;
         }
+
+        return null;
     }
 
     public void SetBeamWidth(int width) {

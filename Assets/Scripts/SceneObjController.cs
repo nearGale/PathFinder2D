@@ -20,6 +20,7 @@ public class SceneObjController : MonoBehaviour
 
     void Update()
     {
+        //Debug.Log($"== SceneObjController Update ==");
         UpdateSelfPos();
         OnUpdate();
     }

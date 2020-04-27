@@ -9,11 +9,14 @@ public class SoldierManager : MonoBehaviour
         Pursuit,
         Queue,
     }
+
     public int NumOfSoldiers;
     public EFollowType followType;
     public Object SoldierResource;
     public Transform FollowTarget;
 
+    public float PosInterval;
+    public int NumPerLine;
 
     private List<GameObject> m_SoldierList = new List<GameObject>();
     
@@ -21,6 +24,8 @@ public class SoldierManager : MonoBehaviour
     {
         for (int i = 0; i < NumOfSoldiers; i++){
             GameObject soldier = Instantiate(SoldierResource, transform) as GameObject;
+            soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
+
             soldier.GetComponent<FollowController>().SetFollowTarget(FollowTarget);
             m_SoldierList.Add(soldier);
         }
