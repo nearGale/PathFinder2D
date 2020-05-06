@@ -27,6 +27,7 @@ public class SoldierManager : MonoBehaviour
             soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
 
             soldier.GetComponent<FollowController>().SetFollowTarget(FollowTarget);
+            soldier.GetComponent<FollowController>().SetPosition(soldier.transform.position);
             m_SoldierList.Add(soldier);
         }
     }
