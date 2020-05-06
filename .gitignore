@@ -1,12 +1,3 @@
-
-*.dwlt
-.vs/PathFinder2D/v15/.suo
-*.ide
-.vs/PathFinder2D/v15/Server/sqlite3/storage.ide-shm
-.vs/PathFinder2D/v15/Server/sqlite3/storage.ide-wal
-Library/assetDatabase3
-*.pdb
-*.dll
-*.json
-*.log
+.vs
 .Temp
+.Library
