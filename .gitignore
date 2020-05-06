@@ -7,7 +7,6 @@
 Library/assetDatabase3
 *.pdb
 *.dll
-*.dll
 *.json
 *.log
-*.dwlt
+.Temp
