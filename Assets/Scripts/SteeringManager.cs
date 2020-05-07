@@ -22,6 +22,8 @@ namespace Application
     public class SteeringManager
     {
         private float m_ForceSteer_Max = 1f;
+        private float m_MoveSpeed_Max = 0.2f;
+
 
         public IEntity host
         {
@@ -90,6 +92,19 @@ namespace Application
             return force;
         }
 
+        /// <summary>
+        /// 向目标位置追赶，计算转向力。
+        /// </summary>
+        /// <param name="target">目标位置</param>
+        /// <param name="velocity">目标速度</param>
+        /// <returns></returns>
+        public void Pursuit(Vector2 target, Vector2 velocity){
+            var distance = target - host.GetPosition();
+            var T = distance.magnitude / m_MoveSpeed_Max;
+            var futurePosition = target + velocity * T;
+            Steering += DoSeek(futurePosition);
+
+        }
         /// <summary>
         /// 向目标位置相反方向逃离，将力增加给 Steering。
         /// </summary>
