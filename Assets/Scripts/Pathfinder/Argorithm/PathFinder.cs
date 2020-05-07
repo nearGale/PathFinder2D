@@ -55,6 +55,9 @@ public class PathFinder {
     }
 
     private bool CheckCanSearch(int startCellId, int endCellId) {
+        if (startCellId == endCellId)
+            return false;
+
         var startCell = CellManager.Instance.GetCellByID(startCellId);
         if (startCell == null)
             return false;
@@ -116,13 +119,13 @@ public class PathFinder {
         switch (type)
         {
             case PathFindAlg.Bfs:
-                path = BfsSearch(startCellId, endCellId, action);
+                path = BfsSearch(startCellId, endCellId);
                 break;
             case PathFindAlg.Astar:
-                path = AStarSearch(startCellId, endCellId, action);
+                path = AStarSearch(startCellId, endCellId);
                 break;
             case PathFindAlg.BeamSearch:
-                path = BeamSearch(startCellId, endCellId, action);
+                path = BeamSearch(startCellId, endCellId);
                 break;
             default:
                 path = null;
@@ -171,7 +174,7 @@ public class PathFinder {
 
     #region BFS
     // TODO: 路径标记有问题，非最短路径
-    private List<int> BfsSearch(int startCellId, int endCellId, Action<List<int>> action = null)
+    private List<int> BfsSearch(int startCellId, int endCellId)
     {
         if (!CheckCanSearch(startCellId, endCellId))
             return null;
@@ -238,7 +241,7 @@ public class PathFinder {
     #endregion
 
     #region AStar
-    private List<int> AStarSearch(int startCellId, int endCellId, Action<List<int>> action = null)
+    private List<int> AStarSearch(int startCellId, int endCellId)
     {
         if (!CheckCanSearch(startCellId, endCellId))
             return null;
@@ -370,7 +373,7 @@ public class PathFinder {
     #endregion
 
     #region BeamSearch
-    private List<int> BeamSearch(int startCellId, int endCellId, Action<List<int>> action = null)
+    private List<int> BeamSearch(int startCellId, int endCellId)
     {
         if (!CheckCanSearch(startCellId, endCellId))
             return null;

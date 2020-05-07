@@ -18,16 +18,6 @@ public class FollowController : SceneObjController, IEntity
     /// 本次移动方向
     /// </summary>
     private Vector2 m_CurrentVelocity;
-    
-    /// <summary>
-    /// 本次 wander 的角度
-    /// </summary>
-    private float m_CurrentWanderAngle;
-
-    /// <summary>
-    /// wander 转向最大角度
-    /// </summary>
-    private float m_AngleChange_Max;
 
     /// <summary>
     /// 最大转向力（用以平滑转向）
@@ -49,16 +39,6 @@ public class FollowController : SceneObjController, IEntity
     /// </summary>
     private float m_SlowingRadius;
 
-    /// <summary>
-    /// 漫步圆的距离
-    /// </summary>
-    private float m_CircleDistance;
-
-    /// <summary>
-    /// 漫步圆的大小
-    /// </summary>
-    private float m_CircleRadius;
-
     private Vector2 m_Position;
     private SteeringManager m_Steering;
 
@@ -72,10 +52,6 @@ public class FollowController : SceneObjController, IEntity
         }
         m_MoveSpeed_Max = 0.1f;
         m_ForceSteer_Max = 1f;
-        m_AngleChange_Max = 50;
-
-        m_CircleDistance = 0.3f;
-        m_CircleRadius = 0.1f;
 
         m_StopRadius = 0.5f;
         m_SlowingRadius = 1f;
@@ -121,7 +97,7 @@ public class FollowController : SceneObjController, IEntity
 
             //
             Vector2 targetPos = GetNextTargetPos();
-            m_Steering.Seek(targetPos);
+            m_Steering.Wander();
             m_Steering.Update();
             transform.position = m_Position;
             
@@ -185,33 +161,6 @@ public class FollowController : SceneObjController, IEntity
         return moveDir;
     }
 
-    private Vector2 CalWanderVector(Vector2 moveDir)
-    {
-        Vector2 circleCenter = moveDir.normalized * m_CircleDistance;
-
-        Vector2 displacement = Vector2.down * m_CircleRadius;
-
-        // 通过修改当前角度，随机改变向量的方向，m_CurrentWanderAngle 初始为 0，默认向上
-        SetAngle(ref displacement, m_CurrentWanderAngle);
-
-        m_CurrentWanderAngle += (Random.Range(0f, 1f) * m_AngleChange_Max) - (m_AngleChange_Max * 0.5f);
-
-        Vector2 wanderForce = circleCenter + displacement;
-
-        VectorHandler.Truncate(ref wanderForce, m_ForceSteer_Max);
-
-        Vector2 wanderVector = wanderForce / m_TempMass;
-
-        return wanderVector;
-    }
-
-    private void SetAngle(ref Vector2 vector, float value)
-    {
-        float len = vector.magnitude;
-        vector.x = Mathf.Cos(value) * len;
-        vector.y = Mathf.Sin(value) * len;
-    }
-
     private bool CheckNeedFollow()
     {
         bool needFollow = false;
@@ -238,6 +187,9 @@ public class FollowController : SceneObjController, IEntity
     {
         Debug.Log($"SetPath - m_CurrentCellId: {m_CurrentCellId}          path: {Logger.ListToString(path)}");
         m_PathfindingRequested = false;
+
+        if (path == null)
+            return;
 
         if (!path.Contains(m_CurrentCellId))
             return;
