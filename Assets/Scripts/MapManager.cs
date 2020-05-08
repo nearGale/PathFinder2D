@@ -57,4 +57,13 @@ public class MapManager : Singleton<MapManager>
         m_Shape = shape;
     }
 
+    public bool IsXInsideMap(int coordinates)
+    {
+        return coordinates >= 0 && coordinates < m_MapWidth;
+    }
+
+    public bool IsYInsideMap(int coordinates)
+    {
+        return coordinates >= 0 && coordinates < m_MapHeight;
+    }
 }

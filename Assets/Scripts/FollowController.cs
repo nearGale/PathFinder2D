@@ -110,27 +110,7 @@ public class FollowController : EntityBaseController
 
         return targetPos;
     }
-
-    private Vector2 CalSteeringVector(Vector2 desiredVelocity, Vector2 currentVelocity)
-    {
-        Vector2 steeringForce = desiredVelocity - currentVelocity;
-        
-        VectorHandler.Truncate(ref steeringForce, m_ForceSteer_Max);
-
-        Vector2 steeringVector = steeringForce / m_TempMass;
-
-        return steeringVector;
-    }
-
-    private Vector2 AddSteering(Vector2 moveVector, Vector2 steeringVector)
-    {
-        Vector2 moveDir = moveVector + steeringVector;
-
-        VectorHandler.Truncate(ref moveDir, m_MoveSpeed_Max);
-
-        return moveDir;
-    }
-
+    
     private bool CheckNeedFollow()
     {
         bool needFollow = false;

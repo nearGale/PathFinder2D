@@ -44,10 +44,15 @@ public class SceneObjController : MonoBehaviour
             var position = mapTrans.InverseTransformPoint(transform.position);
             coordinates = Coordinates.SquareCoordinatesFromPosition(position, MapManager.Instance.GridSize);
 
-            m_CurrentCellId = CellManager.Instance.GetCellByCoordinates(coordinates.GetX(), coordinates.GetZ()).ID;
+            var cell = CellManager.Instance.GetCellByCoordinates(coordinates.GetX(), coordinates.GetZ());
+            if (cell != null)
+            {
+                m_CurrentCellId = cell.ID;
+            }
         }
 
     }
+    
 
     public void SetPos(int currentCellId)
     {

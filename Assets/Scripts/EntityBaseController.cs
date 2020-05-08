@@ -43,7 +43,6 @@ public class EntityBaseController : SceneObjController, IEntity
     protected Vector2 m_Position;
     protected SteeringManager m_Steering;
     
-    
 #region IEntity Interface
     public Vector2 GetVelocity()
     {
@@ -67,6 +66,20 @@ public class EntityBaseController : SceneObjController, IEntity
 
     public void SetPosition(Vector2 pos)
     {
+        Transform mapTrans = MapManager.Instance.GridSystem.transform;
+        if (mapTrans != null)
+        {
+            var localPos = mapTrans.InverseTransformPoint(pos);
+            var coordinates = Coordinates.SquareCoordinatesFromPosition(localPos, MapManager.Instance.GridSize);
+            if (!MapManager.Instance.IsXInsideMap(coordinates.GetX()))
+            {
+                pos.x = m_Position.x;
+            }
+            if (!MapManager.Instance.IsYInsideMap(coordinates.GetZ()))
+            {
+                pos.y = m_Position.y;
+            }
+        }
         m_Position = pos;
     }
 

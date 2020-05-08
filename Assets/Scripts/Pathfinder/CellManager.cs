@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class CellManager : Singleton<CellManager> {
@@ -35,9 +36,9 @@ public class CellManager : Singleton<CellManager> {
     {
         int id = GetIdByCoordinates(x, y);
 
-        if (id > cells.Count)
+        if (id<0 || id > cells.Count -1)
             return null;
-
         return cells[id];
     }
+    
 }
