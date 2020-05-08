@@ -3,44 +3,13 @@ using System.Collections.Generic;
 using Application;
 using UnityEngine;
 
-public class FollowController : SceneObjController, IEntity
+public class FollowController : EntityBaseController
 {
     public Transform FollowTarget;
     private SceneObjController followTargetController;
-
-    public float MoveSpeed_Max { get { return m_MoveSpeed_Max; } }
-    private float m_MoveSpeed_Max;
-
+    
     private List<int> m_Path = new List<int>();
     private WalkState m_State;
-
-    /// <summary>
-    /// 本次移动方向
-    /// </summary>
-    private Vector2 m_CurrentVelocity;
-
-    /// <summary>
-    /// 最大转向力（用以平滑转向）
-    /// </summary>
-    private float m_ForceSteer_Max;
-
-    /// <summary>
-    /// 本物体的质量
-    /// </summary>
-    private float m_TempMass;
-
-    /// <summary>
-    /// 距离目的地 停下的距离
-    /// </summary>
-    public float m_StopRadius;
-
-    /// <summary>
-    /// 距离目的地 开始减速的距离
-    /// </summary>
-    private float m_SlowingRadius;
-
-    private Vector2 m_Position;
-    private SteeringManager m_Steering;
 
     private bool m_PathfindingRequested;
 
@@ -97,6 +66,7 @@ public class FollowController : SceneObjController, IEntity
 
             //
             Vector2 targetPos = GetNextTargetPos();
+//            m_Steering.Seek(targetPos);
             m_Steering.Wander();
             m_Steering.Update();
             transform.position = m_Position;
@@ -197,36 +167,5 @@ public class FollowController : SceneObjController, IEntity
         m_Path.Clear();
         m_Path.AddRange(path);
     }
-
-#region IEntity Interface
-    public Vector2 GetVelocity()
-    {
-        return m_CurrentVelocity;
-    }
-
-    public float GetMaxVelocity()
-    {
-        return m_MoveSpeed_Max;
-    }
-
-    public Vector2 GetPosition()
-    {
-        return m_Position;
-    }
-
-    public float GetMass()
-    {
-        return m_TempMass;
-    }
-
-    public void SetPosition(Vector2 pos)
-    {
-        m_Position = pos;
-    }
-
-    public void SetVelocity(Vector2 velocity)
-    {
-        m_CurrentVelocity = velocity;
-    }
-#endregion
+    
 }

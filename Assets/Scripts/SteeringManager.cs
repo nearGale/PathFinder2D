@@ -18,11 +18,13 @@ namespace Application
         float GetMass();
         void SetPosition(Vector2 pos);
         void SetVelocity(Vector2 velocity);
+
+        float GetSlowingRadius();
+        GameObject GetHostGameObject();
     }
     public class SteeringManager
     {
         private float m_ForceSteer_Max = 1f;
-        private float m_MoveSpeed_Max = 0.2f;
 
 
         public IEntity host
@@ -60,9 +62,9 @@ namespace Application
         /// </summary>
         /// <param name="target">目标位置</param>
         /// <param name="slowingRadius">距离目标开始减速的距离</param>
-        public void Seek(Vector2 target, float slowingRadius = 1f)
+        public void Seek(Vector2 target)
         {
-            Steering += DoSeek(target, slowingRadius);
+            Steering += DoSeek(target, host.GetSlowingRadius());
         }
 
         /// <summary>
@@ -100,10 +102,13 @@ namespace Application
         /// <returns></returns>
         public void Pursuit(Vector2 target, Vector2 velocity){
             var distance = target - host.GetPosition();
-            var T = distance.magnitude / m_MoveSpeed_Max;
+            var T = distance.magnitude / host.GetMaxVelocity();
             var futurePosition = target + velocity * T;
             Steering += DoSeek(futurePosition);
 
+        }
+        public void Pursuit(IEntity target){
+            Pursuit(target.GetPosition(),target.GetVelocity());
         }
         /// <summary>
         /// 向目标位置相反方向逃离，将力增加给 Steering。
