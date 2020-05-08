@@ -6,7 +6,6 @@ using UnityEngine;
 public class FollowController : EntityBaseController
 {
     public Transform FollowTarget;
-    private SceneObjController followTargetController;
     
     private List<int> m_Path = new List<int>();
     private WalkState m_State;

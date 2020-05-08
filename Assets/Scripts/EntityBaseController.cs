@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class EntityBaseController : SceneObjController, IEntity
 {
-    public IEntity FollowTarget;
     protected SceneObjController followTargetController;
 
     protected float m_MoveSpeed_Max;

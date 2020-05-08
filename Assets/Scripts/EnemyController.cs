@@ -6,7 +6,6 @@ using UnityEngine;
 public class EnemyController : EntityBaseController
 {
     public IEntity FollowTarget;
-    private SceneObjController followTargetController;
     
 
     protected override void OnStart()
