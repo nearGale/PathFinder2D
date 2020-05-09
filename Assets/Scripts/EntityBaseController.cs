@@ -41,7 +41,9 @@ public class EntityBaseController : SceneObjController, IEntity
 
     protected Vector2 m_Position;
     protected SteeringManager m_Steering;
-    
+
+    protected float m_MaxSeeAhead = 1.5f;
+    protected float m_MaxAvoidForce = 1.1f;
 #region IEntity Interface
     public Vector2 GetVelocity()
     {
@@ -93,6 +95,16 @@ public class EntityBaseController : SceneObjController, IEntity
     public GameObject GetHostGameObject()
     {
         return gameObject;
+    }
+
+    public float GetMaxSeeAhead()
+    {
+        return m_MaxSeeAhead;
+    }
+
+    public float GetMaxAvoidForce()
+    {
+        return m_MaxAvoidForce;
     }
     #endregion
 }

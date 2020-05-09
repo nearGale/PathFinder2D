@@ -18,9 +18,11 @@ namespace Application
         float GetMass();
         void SetPosition(Vector2 pos);
         void SetVelocity(Vector2 velocity);
-
+        
         float GetSlowingRadius();
         GameObject GetHostGameObject();
+        float GetMaxSeeAhead();
+        float GetMaxAvoidForce();
     }
     public class SteeringManager
     {
@@ -100,15 +102,81 @@ namespace Application
         /// <param name="target">目标位置</param>
         /// <param name="velocity">目标速度</param>
         /// <returns></returns>
-        public void Pursuit(Vector2 target, Vector2 velocity){
+        Vector2  DoPursuit(Vector2 target, Vector2 velocity){
             var distance = target - host.GetPosition();
             var T = distance.magnitude / host.GetMaxVelocity();
             var futurePosition = target + velocity * T;
-            Steering += DoSeek(futurePosition);
+            return  DoSeek(futurePosition);
 
         }
         public void Pursuit(IEntity target){
-            Pursuit(target.GetPosition(),target.GetVelocity());
+            Steering += DoPursuit(target.GetPosition(),target.GetVelocity());
+        }
+        /// <summary>
+        /// 检测运动方向上的障碍物，添加避免碰撞的力。
+        /// </summary>
+        /// <returns></returns>
+        public void CollisionAvoidance()
+        {
+            Steering += DoCollisionAvoidance();
+        }
+
+        Vector2 DoCollisionAvoidance()
+        {
+            Physics2D.queriesStartInColliders = false;
+
+            var dir = host.GetVelocity().normalized;
+            var ahead =  dir * host.GetMaxSeeAhead();
+            var ahead2 =  dir * host.GetMaxSeeAhead() *0.5f;
+            // Bit shift the index of the layer to get a bit mask
+            int layerMask = 1 << (int)ELayer.Entity | 1<< (int)ELayer.Wall;
+
+            // This would cast rays only against colliders in layer Entity and layer Wall.
+            
+            host.GetHostGameObject().GetComponent<BoxCollider2D>();
+            bool hit = false;
+            RaycastHit2D hit2D = Physics2D.Raycast(host.GetPosition(), dir, ahead2.magnitude,layerMask);
+            if (hit2D.transform != null)
+            {
+                hit = true;
+            }
+            
+            if (!hit)
+            {
+                hit2D = Physics2D.Raycast(host.GetPosition(), dir, ahead.magnitude,layerMask);
+            }
+            
+            if(hit)
+            {
+                if (hit2D.transform != null)
+                {
+                    Debug.DrawRay(host.GetPosition(), dir *ahead.magnitude *2f, Color.red);
+//                    Debug.Log("Did Hit" + hit2D.transform.name + "at: "+ hit2D.point);
+                    Vector2 avoidance = Vector2.zero;
+                    var collider = hit2D.collider;
+                    if (collider is BoxCollider2D)
+                    {
+                        Vector2 center = new Vector2(hit2D.collider.transform.position.x, collider.transform.position.y);
+                        var obstacle = new Obstacle(center, collider.transform.localScale.x,collider.transform.localScale.y);
+                        avoidance = hit2D.point - center;
+
+                    } 
+                    else if (hit2D.collider is CircleCollider2D)
+                    {
+                        Vector2 center = new Vector2(hit2D.collider.transform.position.x, collider.transform.position.y);
+                        var obstacle = new Obstacle(center, collider.transform.localScale.x);
+                        avoidance = hit2D.point - center;
+                    }
+
+                    return avoidance.normalized * host.GetMaxAvoidForce();
+                }
+            }
+            else
+            {
+                Debug.DrawRay(host.GetPosition(), dir, Color.green);
+            }
+
+            return Vector2.zero;
         }
         /// <summary>
         /// 向目标位置相反方向逃离，将力增加给 Steering。

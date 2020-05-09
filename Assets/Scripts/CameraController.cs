@@ -22,7 +22,10 @@ public class CameraController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            Physics2D.queriesStartInColliders = true;
+
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            
             if (hit.transform != null)
             {
                 if (MapManager.Instance.GridSystem == null)

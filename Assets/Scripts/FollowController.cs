@@ -67,6 +67,7 @@ public class FollowController : EntityBaseController
             Vector2 targetPos = GetNextTargetPos();
 //            m_Steering.Seek(targetPos);
             m_Steering.Wander();
+            m_Steering.CollisionAvoidance();
             m_Steering.Update();
             transform.position = m_Position;
             
@@ -78,7 +79,7 @@ public class FollowController : EntityBaseController
 
             if (m_Steering.Steering.magnitude == 0 && m_Path != null && m_Path.Count != 0)
                 Debug.LogError("11");
-            Debug.Log($"m_CurrentVelocity: {m_Steering.Steering}     transform:{transform.position}");
+//            Debug.Log($"m_CurrentVelocity: {m_Steering.Steering}     transform:{transform.position}");
         }
     }
 
@@ -90,7 +91,7 @@ public class FollowController : EntityBaseController
         if (m_PathfindingRequested)
             return;
 
-        Debug.Log($"FindPathRequest - m_CurrentCellId: {m_CurrentCellId}            m_PathfindingRequested： {m_PathfindingRequested}");
+//        Debug.Log($"FindPathRequest - m_CurrentCellId: {m_CurrentCellId}            m_PathfindingRequested： {m_PathfindingRequested}");
         m_PathfindingRequested = true;
 
         MapManager.Instance.PathFinder.FindPathRequest(CurrentCellId, followTargetController.CurrentCellId, PathFindAlg.Astar, SetPath);
@@ -134,7 +135,7 @@ public class FollowController : EntityBaseController
 
     private void SetPath(List<int> path)
     {
-        Debug.Log($"SetPath - m_CurrentCellId: {m_CurrentCellId}          path: {Logger.ListToString(path)}");
+//        Debug.Log($"SetPath - m_CurrentCellId: {m_CurrentCellId}          path: {Logger.ListToString(path)}");
         m_PathfindingRequested = false;
 
         if (path == null)

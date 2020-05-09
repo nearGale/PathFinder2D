@@ -7,6 +7,12 @@ public enum GameState {
     Ending,
 }
 
+public enum ELayer
+{
+Default,
+Wall = 9,
+Entity =10,
+}
 public class GameMgr : Singleton<GameMgr> {
     public GameState state { get; private set; }
 

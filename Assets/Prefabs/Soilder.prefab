@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6445973115343779494}
   - component: {fileID: 2046311760354447927}
   - component: {fileID: 2046311760354447931}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Soilder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b21e04c833d33c438af86c2244cadd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FollowTarget: {fileID: 0}
   m_StopRadius: 0
+  FollowTarget: {fileID: 0}
 --- !u!58 &2046311760354447931
 CircleCollider2D:
   m_ObjectHideFlags: 0

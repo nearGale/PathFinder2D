@@ -42,6 +42,7 @@ public class EnemyController : EntityBaseController
             if (FollowTarget != null)
             {
                 m_Steering.Pursuit(FollowTarget);
+                m_Steering.CollisionAvoidance();
                 m_Steering.Update();
                 transform.position = m_Position;
 
