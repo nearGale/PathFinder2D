@@ -65,8 +65,8 @@ public class FollowController : EntityBaseController
 
             //
             Vector2 targetPos = GetNextTargetPos();
-//            m_Steering.Seek(targetPos);
-            m_Steering.Wander();
+            m_Steering.Seek(targetPos);
+            //m_Steering.Wander();
             m_Steering.CollisionAvoidance();
             m_Steering.Update();
             transform.position = m_Position;
