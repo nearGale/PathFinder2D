@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Application;
 using UnityEngine;
 
-public class SoldierManager : MonoBehaviour
+public class SoldierManager : MonoSingleton<SoldierManager>
 {
     public enum EFollowType {
         Follow,
@@ -21,7 +21,8 @@ public class SoldierManager : MonoBehaviour
 
     private List<GameObject> m_SoldierList = new List<GameObject>();
     private string Enemy_Resource_Path = "Enemy";
-    private void Start()
+
+    public void CreateSoldiers()
     {
         GameObject enemy = Instantiate(Resources.Load(Enemy_Resource_Path, typeof(GameObject)), transform) as GameObject;
         enemy.transform.position = new Vector2(Random.Range(0, 20), Random.Range(0, 20));
@@ -31,6 +32,7 @@ public class SoldierManager : MonoBehaviour
 
             soldier.GetComponent<FollowController>().SetFollowTarget(FollowTarget);
             soldier.GetComponent<FollowController>().SetPosition(soldier.transform.position);
+            
             m_SoldierList.Add(soldier);
             if (i == 0)
             {

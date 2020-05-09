@@ -42,6 +42,7 @@ public class FollowController : EntityBaseController
 
         if (Input.GetKey(KeyCode.G))
         {
+            Debug.Log(m_Position);
             CalFollowPath();
 
             if (!CheckNeedFollow() || m_Path == null)

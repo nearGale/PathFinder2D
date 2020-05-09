@@ -176,7 +176,7 @@ PrefabInstance:
     - target: {fileID: 1907520479146220553, guid: 1ff7b33f58a404210945556728485565,
         type: 3}
       propertyPath: NumOfSoldiers
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1907520479146220554, guid: 1ff7b33f58a404210945556728485565,
         type: 3}

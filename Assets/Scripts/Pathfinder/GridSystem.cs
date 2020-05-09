@@ -28,11 +28,12 @@ public class GridSystem : MonoBehaviour {
     // 可配置的默认状态的和触碰时的颜色
     public Sprite defaultType = null;
 
-    void Start() {
+    void Update() { }
+
+    public void GenerateMap()
+    {
         GenerateMap(m_CellShape, width, height, gridSize);
     }
-
-    void Update() { }
 
     public void GenerateMap(CellShape shape, int width, int height, float gridSize)
     {
