@@ -9,6 +9,11 @@ public class FlowController : MonoBehaviour
         GameMgr.Instance.Init();
     }
 
+    private void Start()
+    {
+        GameMgr.Instance.Start();
+    }
+
     private void Update()
     {
         GameMgr.Instance.Update();
