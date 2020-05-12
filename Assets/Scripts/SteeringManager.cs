@@ -151,7 +151,7 @@ namespace Application
                 if (hit2D.transform != null)
                 {
                     Debug.DrawRay(host.GetPosition(), dir *ahead.magnitude *2f, Color.red);
-//                    Debug.Log("Did Hit" + hit2D.transform.name + "at: "+ hit2D.point);
+                    Debug.Log("Did Hit" + hit2D.transform.name + "at: " + hit2D.point);
                     Vector2 avoidance = Vector2.zero;
                     var collider = hit2D.collider;
                     if (collider is BoxCollider2D)
