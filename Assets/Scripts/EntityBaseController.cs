@@ -67,11 +67,11 @@ public class EntityBaseController : SceneObjController, IEntity
 
     public void SetPosition(Vector2 pos)
     {
-        Debug.Log("AAA " + m_Position + " " + pos);
         Transform mapTrans = MapManager.Instance.GridSystem.transform;
         if (mapTrans != null)
         {
-            var coordinates = Coordinates.SquareCoordinatesFromPosition(pos, MapManager.Instance.GridSize);
+            var localPos = mapTrans.InverseTransformPoint(pos);
+            var coordinates = Coordinates.SquareCoordinatesFromPosition(localPos, MapManager.Instance.GridSize);
             if (!MapManager.Instance.IsXInsideMap(coordinates.GetX()))
             {
                 pos.x = m_Position.x;

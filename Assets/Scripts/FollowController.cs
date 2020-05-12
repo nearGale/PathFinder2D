@@ -42,7 +42,6 @@ public class FollowController : EntityBaseController
 
         if (Input.GetKey(KeyCode.G))
         {
-            Debug.Log(m_Position);
             CalFollowPath();
 
             if (!CheckNeedFollow() || m_Path == null)
@@ -66,8 +65,8 @@ public class FollowController : EntityBaseController
 
             //
             Vector2 targetPos = GetNextTargetPos();
-            m_Steering.Seek(targetPos);
-            //m_Steering.Wander();
+//            m_Steering.Seek(targetPos);
+            m_Steering.Wander();
             m_Steering.CollisionAvoidance();
             m_Steering.Update();
             transform.position = m_Position;

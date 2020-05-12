@@ -13,7 +13,7 @@ public class SquareCellWithWall : SquareCell
     public Transform WallWhole;
     public Transform[] Walls;
     public Transform[] Doors;
-    
+
     public void InitWall()
     {
         WallWhole.gameObject.SetActive(false);
@@ -46,7 +46,7 @@ public class SquareCellWithWall : SquareCell
     {
         Walls[(int)dir].gameObject.SetActive(false);
         Doors[(int)dir].gameObject.SetActive(false);
-        
+
         if (neighbors[(int)dir] == null)
         {
             Walls[(int)dir].gameObject.SetActive(true);
@@ -73,50 +73,5 @@ public class SquareCellWithWall : SquareCell
             WallWhole.gameObject.SetActive(true);
         else
             WallWhole.gameObject.SetActive(false);
-    }
-
-    public void RefreshEmpty(List<SquareDirection> ignoreDirections = null)
-    {
-        if (ignoreDirections == null)
-            return;
-
-        bool isEmpty = true;
-        for (int i = 0; i < neighbors.Length; i++)
-        {
-            if(ignoreDirections.Contains((SquareDirection)i))
-                continue;
-
-            if (neighbors[i] == null)
-            {
-                isEmpty = false;
-                break;
-            }
-        }
-
-        if (isEmpty)
-        {
-            if(ignoreDirections == null || ignoreDirections.Count == 0)
-            {
-                foreach (var wall in Walls)
-                {
-                    wall.gameObject.SetActive(false);
-                }
-                foreach (var door in Doors)
-                {
-                    door.gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < neighbors.Length; i++)
-                {
-                    if(neighbors[i] != null)
-                    {
-                        Walls[i].gameObject.SetActive(false);
-                        Doors[i].gameObject.SetActive(false);
-                    }
-                }
-            }
-        }
     }
 }

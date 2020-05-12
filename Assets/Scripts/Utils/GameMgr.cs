@@ -27,13 +27,6 @@ public class GameMgr : Singleton<GameMgr> {
         CellManager.Instance.Init();
         MapManager.Instance.Init();
         MessageManager.Instance.Init();
-        SoldierManager.Instance.Init();
-    }
-
-    public void Start()
-    {
-        MapManager.Instance.GridSystem.GenerateMap();
-        SoldierManager.Instance.CreateSoldiers();
     }
 
     public void Update()

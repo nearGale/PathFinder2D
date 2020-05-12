@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public enum CellShape {
@@ -28,12 +27,11 @@ public class GridSystem : MonoBehaviour {
     // 可配置的默认状态的和触碰时的颜色
     public Sprite defaultType = null;
 
-    void Update() { }
-
-    public void GenerateMap()
-    {
+    void Start() {
         GenerateMap(m_CellShape, width, height, gridSize);
     }
+
+    void Update() { }
 
     public void GenerateMap(CellShape shape, int width, int height, float gridSize)
     {
@@ -163,18 +161,6 @@ public class GridSystem : MonoBehaviour {
             }
 
             cell.RefreshIsBlock();
-
-            List<SquareDirection> ignoreDirections = new List<SquareDirection>();
-            if (x == 0)
-                ignoreDirections.Add(SquareDirection.W);
-            if (y == 0)
-                ignoreDirections.Add(SquareDirection.S);
-            if (x == MapManager.Instance.MapWidth - 1)
-                ignoreDirections.Add(SquareDirection.E);
-            if (y == MapManager.Instance.MapHeight - 1)
-                ignoreDirections.Add(SquareDirection.N);
-
-            cell.RefreshEmpty(ignoreDirections);
         }
     }
 
