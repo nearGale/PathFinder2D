@@ -26,7 +26,7 @@ public class WalkController : SceneObjController
     {
         base.OnStart();
 
-        m_MoveSpeed = 1f;
+        m_MoveSpeed = 0.5f;
         MessageManager.Instance.Register(Event.ClickOnCell, ClickOnCell);
     }
 
