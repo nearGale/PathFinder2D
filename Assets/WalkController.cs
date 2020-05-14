@@ -10,7 +10,7 @@ public enum WalkState
     Stop,
 }
 
-public class WalkController : SceneObjController
+public class WalkController : EntityBaseController
 {
     public float ArriveDistance;
 
@@ -26,8 +26,9 @@ public class WalkController : SceneObjController
     {
         base.OnStart();
 
-        m_MoveSpeed = 0.5f;
+        m_MoveSpeed = 0.15f;
         MessageManager.Instance.Register(Event.ClickOnCell, ClickOnCell);
+        InitAnimComponent();
     }
 
     protected override void OnUpdate()
@@ -67,6 +68,7 @@ public class WalkController : SceneObjController
         var targetPos = CellManager.Instance.GetCellByID(m_Path[0]).transform.position;
 
         var moveDir = (targetPos - transform.position).normalized * m_MoveSpeed;
+        SetVelocity(new Vector2(moveDir.x, moveDir.y));
 
         transform.Translate(moveDir);
     }
@@ -75,6 +77,7 @@ public class WalkController : SceneObjController
     {
         m_Path?.Clear();
         SetWalkState(WalkState.Stop);
+        SetVelocity(Vector2.zero);
     }
 
     private void DoFindPath(int targetCellId)
@@ -104,4 +107,5 @@ public class WalkController : SceneObjController
     {
         m_WalkingState = state;
     }
+    
 }

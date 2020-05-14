@@ -44,6 +44,12 @@ public class EntityBaseController : SceneObjController, IEntity
 
     protected float m_MaxSeeAhead = 1.5f;
     protected float m_MaxAvoidForce = 1.1f;
+
+    protected void InitAnimComponent()
+    {
+        var animComponent = gameObject.AddComponent<AnimComponent>();
+        animComponent.SetOwner(this);
+    }
 #region IEntity Interface
     public Vector2 GetVelocity()
     {

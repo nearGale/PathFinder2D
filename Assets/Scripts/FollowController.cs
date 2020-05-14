@@ -29,6 +29,7 @@ public class FollowController : EntityBaseController
         m_Steering = new SteeringManager(this);
 
         m_PathfindingRequested = false;
+        InitAnimComponent();
     }
 
     public void SetFollowTarget(Transform followTarget){
@@ -81,6 +82,10 @@ public class FollowController : EntityBaseController
             if (m_Steering.Steering.magnitude == 0 && m_Path != null && m_Path.Count != 0)
                 Debug.LogError("11");
 //            Debug.Log($"m_CurrentVelocity: {m_Steering.Steering}     transform:{transform.position}");
+        }
+        else
+        {
+            SetVelocity(Vector2.zero);
         }
     }
 

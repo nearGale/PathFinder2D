@@ -24,6 +24,8 @@ public class EnemyController : EntityBaseController
         m_TempMass = 1;
         m_Steering = new SteeringManager(this);
         m_Position = new Vector2(transform.position.x, transform.position.y);
+        
+        InitAnimComponent();
     }
 
 
