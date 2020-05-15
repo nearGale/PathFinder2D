@@ -7,7 +7,7 @@ public class EntityBaseController : SceneObjController, IEntity
 {
     protected SceneObjController followTargetController;
 
-    protected float m_MoveSpeed_Max;
+    protected float m_MoveSpeed_Max = 0.2f;
     
     /// <summary>
     /// 本次移动方向

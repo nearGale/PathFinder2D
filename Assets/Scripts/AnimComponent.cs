@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using Application;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class AnimComponent : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class AnimComponent : MonoBehaviour
     private string m_CurrentState;
     private Vector3 m_LocalScale = Vector3.zero;
     private float m_AnimatorSpeed;
+    
     public IEntity Owner
     {
         get; private set;
@@ -18,7 +21,10 @@ public class AnimComponent : MonoBehaviour
         if (Owner != null)
         {
             var v = Owner.GetVelocity();
-            m_Animator.speed = m_AnimatorSpeed * v.magnitude / Owner.GetMaxVelocity();
+            var speed = m_AnimatorSpeed * v.magnitude / Owner.GetMaxVelocity();
+            speed = speed < 0.01f ? 0.5f : speed;
+            m_Animator.speed = speed;
+            
             if(Math.Abs(v.y) >Math.Abs(v.x))
             {
                  if(v.y > 0)
@@ -32,13 +38,22 @@ public class AnimComponent : MonoBehaviour
             }
             else
             {
-                if (v.x >= 0)
+//                Debug.Log("@@@ v:" + v + m_CurrentState);
+                if (v.x >= 0.005f)
                 {
                     PlayWalkRight();
                 }
-                else
+                else if (v.x <0)
                 {
                     PlayWalkLeft();
+                }
+                else 
+                {
+                    //keep previous state; if previous state is null ,walk right
+                    if (string.IsNullOrEmpty(m_CurrentState))
+                    {
+                        PlayWalkRight();
+                    }
                 }
             }
         }

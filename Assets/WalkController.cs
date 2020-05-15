@@ -39,6 +39,10 @@ public class WalkController : EntityBaseController
         {
             DoWalk();
         }
+        else
+        {
+            SetVelocity(Vector2.zero);
+        }
     }
 
 
