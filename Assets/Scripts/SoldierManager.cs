@@ -52,4 +52,16 @@ public class SoldierManager : MonoSingleton<SoldierManager>
 
     }
 
+    public void CreateSoldier()
+    {
+        GameObject soldier = Instantiate(SoldierResource, transform) as GameObject;
+        int i = Random.Range(0, 20);
+        soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
+
+        soldier.GetComponent<FollowController>().SetFollowTarget(FollowTarget);
+        soldier.GetComponent<FollowController>().SetPosition(soldier.transform.position);
+
+        m_SoldierList.Add(soldier);
+    }
+
 }

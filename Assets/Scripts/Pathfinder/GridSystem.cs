@@ -306,7 +306,13 @@ public class GridSystem : MonoBehaviour {
 
         return null;
     }
-    
+
+    public void ClearBlocks()
+    {
+        ResetNeightbors();
+        RenderCells();
+    }
+
     /// <summary>
     /// 随机生成障碍
     /// </summary>

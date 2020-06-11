@@ -30,6 +30,7 @@ public class MapEditor : MonoBehaviour {
     public Button cleanPathBtn;
     public Button clearBtn;
     public Button randomBlockBtn;
+    public Button addChaserBtn;
 
     private int m_StartCellId;
     private int m_EndCellId;
@@ -78,10 +79,13 @@ public class MapEditor : MonoBehaviour {
             () => ResetColor(false)
         );
         clearBtn.onClick.AddListener(
-            () => Clear()
+            () => gridSystem.ClearBlocks()
         );
         randomBlockBtn.onClick.AddListener(
             () => gridSystem.GenerateRandomBlocks()
+        );
+        addChaserBtn.onClick.AddListener(
+            () => SoldierManager.Instance.CreateSoldier()
         );
     }
 

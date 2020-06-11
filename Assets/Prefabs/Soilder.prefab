@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2046311760354447927}
   - component: {fileID: 2584416592014178164}
   - component: {fileID: 1090241112793220534}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Soilder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
