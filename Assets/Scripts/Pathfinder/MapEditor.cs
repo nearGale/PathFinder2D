@@ -109,8 +109,8 @@ public class MapEditor : MonoBehaviour {
                 case PathCellMark.StartPos:
 
                     BaseCell lastStartCell = CellManager.Instance.GetCellByID(m_StartCellId);
-                    if (lastStartCell != null)
-                        lastStartCell.GetComponent<SpriteRenderer>().color = types[2];
+                    //if (lastStartCell != null)
+                    //    lastStartCell.GetComponent<SpriteRenderer>().color = types[2];
 
                     var startCell = hit.transform.GetComponent<BaseCell>();
                     if (startCell != null)
@@ -120,8 +120,8 @@ public class MapEditor : MonoBehaviour {
                 case PathCellMark.EndPos:
 
                     BaseCell lastEndCell = CellManager.Instance.GetCellByID(m_EndCellId);
-                    if (lastEndCell != null)
-                        lastEndCell.GetComponent<SpriteRenderer>().color = types[2];
+                    //if (lastEndCell != null)
+                    //    lastEndCell.GetComponent<SpriteRenderer>().color = types[2];
 
                     var endCell = hit.transform.GetComponent<BaseCell>();
                     if (endCell != null)
@@ -142,7 +142,7 @@ public class MapEditor : MonoBehaviour {
     /// </summary>
     /// <param name="cell">目标网格</param>
     void EditCell(BaseCell cell) {
-        SetCellColor(cell, activeColor);
+        //SetCellColor(cell, activeColor);
     }
 
     void SetCellColor(BaseCell cell, Color color) {
@@ -186,15 +186,15 @@ public class MapEditor : MonoBehaviour {
                 cell.GetComponent<SpriteRenderer>().color = Color.white;
                 cell.SetIsBlock(false);
             }
-            else
-            {
-                if (cell.ID == m_StartCellId)
-                    cell.GetComponent<SpriteRenderer>().color = Color.red;
-                else if (cell.ID == m_EndCellId)
-                    cell.GetComponent<SpriteRenderer>().color = Color.black;
-                else if (!cell.block)
-                    cell.GetComponent<SpriteRenderer>().color = Color.white;
-            }
+            //else
+            //{
+            //    if (cell.ID == m_StartCellId)
+            //        cell.GetComponent<SpriteRenderer>().color = Color.red;
+            //    else if (cell.ID == m_EndCellId)
+            //        cell.GetComponent<SpriteRenderer>().color = Color.black;
+            //    else if (!cell.block)
+            //        cell.GetComponent<SpriteRenderer>().color = Color.white;
+            //}
         }
     }
 
@@ -213,7 +213,7 @@ public class MapEditor : MonoBehaviour {
             if (cell == null)
                 continue;
 
-            cell.GetComponent<SpriteRenderer>().color = Color.blue;
+            //cell.GetComponent<SpriteRenderer>().color = Color.blue;
         }
     }
 }
