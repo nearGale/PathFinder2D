@@ -158,9 +158,11 @@ namespace Application
                     {
                         Vector2 center = new Vector2(hit2D.collider.transform.position.x, collider.transform.position.y);
                         var obstacle = new Obstacle(center, collider.transform.localScale.x,collider.transform.localScale.y);
-                        avoidance = hit2D.point - center;
+                        avoidance = host.GetPosition() - hit2D.point;
+                        //avoidance = hit2D.point - center;
 
-                    } 
+
+                    }
                     else if (hit2D.collider is CircleCollider2D)
                     {
                         Vector2 center = new Vector2(hit2D.collider.transform.position.x, collider.transform.position.y);
@@ -168,7 +170,7 @@ namespace Application
                         avoidance = hit2D.point - center;
                     }
 
-                    return avoidance.normalized * host.GetMaxAvoidForce();
+                    return avoidance.normalized * host.GetMaxAvoidForce() -0.8f *host.GetVelocity();
                 }
             }
             else

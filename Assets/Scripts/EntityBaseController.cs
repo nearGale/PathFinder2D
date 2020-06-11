@@ -43,7 +43,7 @@ public class EntityBaseController : SceneObjController, IEntity
     protected SteeringManager m_Steering;
 
     protected float m_MaxSeeAhead = 1.5f;
-    protected float m_MaxAvoidForce = 1.1f;
+    protected float m_MaxAvoidForce = 1.25f;
 
     protected void InitAnimComponent()
     {
@@ -73,7 +73,7 @@ public class EntityBaseController : SceneObjController, IEntity
 
     public void SetPosition(Vector2 pos)
     {
-        Debug.Log("AAA " + m_Position + " " + pos);
+        //Debug.Log("AAA " + m_Position + " " + pos);
         Transform mapTrans = MapManager.Instance.GridSystem.transform;
         if (mapTrans != null)
         {
