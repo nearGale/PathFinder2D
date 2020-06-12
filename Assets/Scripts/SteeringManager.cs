@@ -157,9 +157,24 @@ namespace Application
                     if (collider is BoxCollider2D)
                     {
                         Vector2 center = new Vector2(hit2D.collider.transform.position.x, collider.transform.position.y);
-                        var obstacle = new Obstacle(center, collider.transform.localScale.x,collider.transform.localScale.y);
-                        avoidance = host.GetPosition() - hit2D.point;
-                        //avoidance = hit2D.point - center;
+                        var obstacle = new Obstacle(center, collider.transform.localScale.x, collider.transform.localScale.y);
+
+                        if (collider.transform.localScale.x == collider.transform.localScale.y)
+                        {
+                            avoidance = host.GetPosition() - hit2D.point;
+                            //avoidance = hit2D.point - center;
+                        }
+                        else if (collider.transform.localScale.y > collider.transform.localScale.x)
+                        {
+                            // Vertical
+                            avoidance = host.GetPosition() - new Vector2(center.x, host.GetPosition().y);
+                        }
+                        else
+                        {
+                            // horizontal
+                            avoidance = host.GetPosition() - new Vector2(host.GetPosition().x, center.y);
+                        }
+
 
 
                     }

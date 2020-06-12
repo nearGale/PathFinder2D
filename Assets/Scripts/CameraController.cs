@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
                 if (cell == null)
                     return;
 
-                MessageManager.Instance.Do(Event.ClickOnCell, cell.ID);
+                MessageManager.Instance.Do(Event.ClickOnCell, cell.ID, hit.point);
             }
         }
     }

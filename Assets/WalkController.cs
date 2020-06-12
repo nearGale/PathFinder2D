@@ -20,6 +20,8 @@ public class WalkController : EntityBaseController
     public WalkState WalkingState { get { return m_WalkingState; } }
     private WalkState m_WalkingState;
 
+    private Vector2 m_EndPosition;
+
     private List<int> m_Path = new List<int>();
 
     protected override void OnStart()
@@ -63,13 +65,27 @@ public class WalkController : EntityBaseController
             m_Path.RemoveAt(i);
         }
 
+        Vector3 targetPos;
+
         if (m_Path.Count == 0)
         {
-            StopWalk();
-            return;
-        }
+            BaseCell endPointCell = MapManager.Instance.GridSystem.GetCellByPos(CellShape.SquareWithWall, m_EndPosition);
+            BaseCell hostCell = MapManager.Instance.GridSystem.GetCellByPos(CellShape.SquareWithWall, GetHostGameObject().transform.position);
 
-        var targetPos = CellManager.Instance.GetCellByID(m_Path[0]).transform.position;
+            if (endPointCell.ID == hostCell.ID && ((Vector2)GetHostGameObject().transform.position - m_EndPosition).magnitude > m_StopRadius)
+            {
+                targetPos = m_EndPosition;
+            }
+            else
+            {
+                StopWalk();
+                return;
+            }
+        }
+        else
+        {
+            targetPos = CellManager.Instance.GetCellByID(m_Path[0]).transform.position;
+        }
 
         var moveDir = (targetPos - transform.position).normalized * m_MoveSpeed;
         SetVelocity(new Vector2(moveDir.x, moveDir.y));
@@ -84,10 +100,16 @@ public class WalkController : EntityBaseController
         SetVelocity(Vector2.zero);
     }
 
-    private void DoFindPath(int targetCellId)
+    private void DoFindPath(int targetCellId, Vector2 clickPoint)
     {
         SetWalkState(WalkState.StartFind);
+        SetEndPosition(clickPoint);
         MapManager.Instance.PathFinder.FindPath(CurrentCellId, targetCellId, PathFindAlg.Astar, SetPath);
+    }
+
+    private void SetEndPosition(Vector2 endPoint)
+    {
+        m_EndPosition = endPoint;
     }
 
     private void SetPath(List<int> path)
@@ -100,11 +122,13 @@ public class WalkController : EntityBaseController
 
     public void ClickOnCell(params object[] param)
     {
-        if (param == null || param.Length < 1)
+        if (param == null || param.Length < 2)
             return;
 
         int cellId = (int)param[0];
-        DoFindPath(cellId);
+        Vector2 clickPoint = (Vector2)param[1];
+
+        DoFindPath(cellId, clickPoint);
     }
 
     private void SetWalkState(WalkState state)

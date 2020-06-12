@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class GameBlackBoard
 {
-    public static int MAP_PATHFIND_PER_FRAME = 100;
+    public static int MAP_PATHFIND_PER_FRAME = 50;
 }
