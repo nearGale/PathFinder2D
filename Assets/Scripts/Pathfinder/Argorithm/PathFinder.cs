@@ -256,6 +256,7 @@ public class PathFinder {
         {
             if (searchingCell.ID == endCellId)
                 keepSearching = false;
+
             m_CellsToSearch.Remove(searchingCell);
             m_CellsSearched.Add(searchingCell);
 
@@ -263,8 +264,17 @@ public class PathFinder {
             {
                 if (neighbor == null || neighbor.block)
                     continue;
-                if (m_CellsToSearch.Contains(neighbor) || m_CellsSearched.Contains(neighbor))
+                if (m_CellsToSearch.Contains(neighbor))
                     continue;
+                if (m_CellsSearched.Contains(neighbor))
+                {
+                    if(neighbor.CalG() > neighbor.PassableDifficulty + searchingCell.CalG())
+                    {
+                        neighbor.SetParent(searchingCell.ID);
+                    }
+                    continue;
+                }
+
                 m_CellsToSearch.Add(neighbor);
                 neighbor.SetParent(searchingCell.ID);
                 if (neighbor.ID == endCellId)
@@ -294,10 +304,10 @@ public class PathFinder {
             }
 
             BaseCell newSearchingCell = null;
-            int minF = -1;
+            float minF = -1;
             foreach (var cell in m_CellsToSearch)
             {
-                int f = CalF(endCellId, cell.ID);
+                float f = CalF(endCellId, cell.ID);
                 if (f < 0)
                 {
                     Debug.Log("这货距离小于零啊，有问题");
@@ -328,14 +338,15 @@ public class PathFinder {
         return null;
     }
 
-    private int CalF(int targetCellID, int presentCellID) {
+    private float CalF(int targetCellID, int presentCellID) {
         BaseCell presentCell = CellManager.Instance.GetCellByID(presentCellID);
         if (presentCell == null)
         {
             Debug.LogError("当前网格ID不合法");
             return -1;
         }
-        int g = presentCell.CalG();
+        float g = presentCell.CalG();
+        // h 的默认每个格子的 可通行度为 1
         int h = CalH(targetCellID, presentCellID);
         if (h == -1)
             return -1;
@@ -498,7 +509,7 @@ public class PathFinder {
         int first = low, last = high;
         //此时a[low]被保存到key，所以元素a[low]可以当作是一个空位，用于保存数据，之后每赋值一次，也会有一个位置空出来，直到last==first，此时a[last]==a[first]=key
 
-        int key = a[low].beamFVal;
+        float key = a[low].beamFVal;
         BaseCell lowCell = a[low];
         while (first < last)
         {

@@ -646,6 +646,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 4394378484054472299, guid: e3192713a74d61942936bed88aefacf9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4941328063562214061, guid: e3192713a74d61942936bed88aefacf9,
         type: 3}
       propertyPath: m_Name
@@ -1079,6 +1084,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: General
+      objectReference: {fileID: 0}
+    - target: {fileID: 7766757064273368602, guid: 273fcebaf559710418dce33fa3527030,
+        type: 3}
+      propertyPath: m_StopRadius
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 273fcebaf559710418dce33fa3527030, type: 3}

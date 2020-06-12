@@ -12,16 +12,18 @@ public abstract class BaseCell : MonoBehaviour {
     public Sprite type;
     public int parentID { get; protected set; }
     public int ID { get; protected set; }
-    public int gVal { get; protected set; }
-    public int beamFVal;
+    //public int gVal { get; protected set; }
+    public float beamFVal;
     public bool block { get; protected set; }
+
+    public float PassableDifficulty = 1;
 
     public SpriteRenderer spriteRenderer { get; private set; }
 
     protected virtual void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         parentID = -1;
-        gVal = 0;
+        //gVal = 0;
         block = false;
         beamFVal = -1;
     }
@@ -38,15 +40,27 @@ public abstract class BaseCell : MonoBehaviour {
         parentID = parentCell;
     }
 
-    public virtual int CalG()
+    public void SetPassableDifficulty(float difficulty)
+    {
+        PassableDifficulty = difficulty;
+    }
+
+    public virtual float CalG()
     {
         BaseCell parentCell = CellManager.Instance.GetCellByID(parentID);
+        //if (parentCell == null)
+        //{
+        //    // 无父节点
+        //    return 0;
+        //}
+        //gVal = parentCell.gVal + 1;
+        //return gVal;
+
         if (parentCell == null)
         {
             // 无父节点
-            return 0;
+            return PassableDifficulty;
         }
-        gVal = parentCell.gVal + 1;
-        return gVal;
+        return parentCell.CalG() + PassableDifficulty;
     }
 }

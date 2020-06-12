@@ -70,9 +70,8 @@ public class WalkController : EntityBaseController
         if (m_Path.Count == 0)
         {
             BaseCell endPointCell = MapManager.Instance.GridSystem.GetCellByPos(CellShape.SquareWithWall, m_EndPosition);
-            BaseCell hostCell = MapManager.Instance.GridSystem.GetCellByPos(CellShape.SquareWithWall, GetHostGameObject().transform.position);
 
-            if (endPointCell.ID == hostCell.ID && ((Vector2)GetHostGameObject().transform.position - m_EndPosition).magnitude > m_StopRadius)
+            if (endPointCell.ID == CurrentCellId && ((Vector2)GetHostGameObject().transform.position - m_EndPosition).magnitude > m_StopRadius)
             {
                 targetPos = m_EndPosition;
             }
@@ -102,8 +101,15 @@ public class WalkController : EntityBaseController
 
     private void DoFindPath(int targetCellId, Vector2 clickPoint)
     {
-        SetWalkState(WalkState.StartFind);
         SetEndPosition(clickPoint);
+        
+        if (targetCellId == CurrentCellId)
+        {
+            SetWalkState(WalkState.OnFind);
+            return;
+        }
+
+        SetWalkState(WalkState.StartFind);
         MapManager.Instance.PathFinder.FindPath(CurrentCellId, targetCellId, PathFindAlg.Astar, SetPath);
     }
 

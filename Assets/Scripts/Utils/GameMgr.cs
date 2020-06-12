@@ -39,6 +39,6 @@ public class GameMgr : Singleton<GameMgr> {
     public void Update()
     {
         MapManager.Instance.Update();
-
+        CellManager.Instance.Update();
     }
 }

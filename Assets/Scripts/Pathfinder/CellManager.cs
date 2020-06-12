@@ -16,6 +16,11 @@ public class CellManager : Singleton<CellManager> {
         cells = new List<BaseCell>();
     }
 
+    public void Update()
+    {
+        RefreshCellG();
+    }
+
     public void AddCell(BaseCell cell) {
         cells.Add(cell);
     }
@@ -39,6 +44,32 @@ public class CellManager : Singleton<CellManager> {
         if (id<0 || id > cells.Count -1)
             return null;
         return cells[id];
+    }
+
+    public void RefreshCellG()
+    {
+        List<SceneObjController> characters = SoldierManager.Instance.GetCharacters();
+        if(characters == null || characters.Count == 0)
+        {
+            return;
+        }
+
+        foreach(var cell in cells)
+        {
+            cell.SetPassableDifficulty(0);
+        }
+
+        foreach (var character in characters)
+        {
+            if (character == null)
+                continue;
+
+            BaseCell cell = GetCellByID(character.CurrentCellId);
+            if (cell == null)
+                continue;
+
+            cell.SetPassableDifficulty(cell.PassableDifficulty + GameBlackBoard.CELL_PASSABLE_DIFFICULTY_ADD_PER_CHARACTER);
+        }
     }
     
 }

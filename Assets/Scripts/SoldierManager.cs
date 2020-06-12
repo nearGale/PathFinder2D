@@ -19,7 +19,7 @@ public class SoldierManager : MonoSingleton<SoldierManager>
     public float PosInterval;
     public int NumPerLine;
 
-    private List<GameObject> m_SoldierList = new List<GameObject>();
+    private List<SceneObjController> m_SoldierList = new List<SceneObjController>();
     private string Enemy_Resource_Path = "Enemy";
 
     public void CreateSoldiers()
@@ -30,10 +30,15 @@ public class SoldierManager : MonoSingleton<SoldierManager>
             GameObject soldier = Instantiate(SoldierResource, transform) as GameObject;
             soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
 
-            soldier.GetComponent<FollowController>().SetFollowTarget(FollowTarget);
-            soldier.GetComponent<FollowController>().SetPosition(soldier.transform.position);
+            FollowController followController = soldier.GetComponent<FollowController>();
+
+            if (followController == null)
+                return;
+
+            followController.SetFollowTarget(FollowTarget);
+            followController.SetPosition(soldier.transform.position);
             
-            m_SoldierList.Add(soldier);
+            m_SoldierList.Add(followController);
             if (i == 0)
             {
                 // temp: pursuit the first soldier
@@ -58,10 +63,19 @@ public class SoldierManager : MonoSingleton<SoldierManager>
         int i = Random.Range(0, 20);
         soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
 
-        soldier.GetComponent<FollowController>().SetFollowTarget(FollowTarget);
-        soldier.GetComponent<FollowController>().SetPosition(soldier.transform.position);
+        FollowController followController = soldier.GetComponent<FollowController>();
 
-        m_SoldierList.Add(soldier);
+        if (followController == null)
+            return;
+
+        followController.SetFollowTarget(FollowTarget);
+        followController.SetPosition(soldier.transform.position);
+
+        m_SoldierList.Add(followController);
     }
 
+    public List<SceneObjController> GetCharacters()
+    {
+        return m_SoldierList;
+    }
 }
