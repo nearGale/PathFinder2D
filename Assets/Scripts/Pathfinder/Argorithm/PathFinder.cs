@@ -116,6 +116,9 @@ public class PathFinder {
     {
         List<int> path;
 
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
         switch (type)
         {
             case PathFindAlg.Bfs:
@@ -131,6 +134,8 @@ public class PathFinder {
                 path = null;
                 break;
         }
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
 
         OnSearchEnd(action, path);
     }

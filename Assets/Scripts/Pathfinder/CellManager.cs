@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
+public enum EPassableDifficulty
+{
+    High,
+    Medium,
+    Low,
+    None
+}
+
+
 public class CellManager : Singleton<CellManager> {
 
     public CellShape cellShape;
+
+    private EPassableDifficulty m_PassableDifficulty;
 
     public List<BaseCell> cells { get; private set; }
 
@@ -48,7 +59,7 @@ public class CellManager : Singleton<CellManager> {
 
     public void RefreshCellG()
     {
-        List<SceneObjController> characters = SoldierManager.Instance.GetCharacters();
+        List<EntityBaseController> characters = SoldierManager.Instance.GetCharacters();
         if(characters == null || characters.Count == 0)
         {
             return;
@@ -68,8 +79,27 @@ public class CellManager : Singleton<CellManager> {
             if (cell == null)
                 continue;
 
-            cell.SetPassableDifficulty(cell.PassableDifficulty + GameBlackBoard.CELL_PASSABLE_DIFFICULTY_ADD_PER_CHARACTER);
+            float passableDifficulty = 0;
+            if(m_PassableDifficulty == EPassableDifficulty.High)
+            {
+                passableDifficulty = GameBlackBoard.CELL_PASSABLE_DIFFICULTY_ADD_PER_CHARACTER_HIGH;
+            }
+            else if(m_PassableDifficulty == EPassableDifficulty.Medium)
+            {
+                passableDifficulty = GameBlackBoard.CELL_PASSABLE_DIFFICULTY_ADD_PER_CHARACTER_MEDIUM;
+            }
+            else if (m_PassableDifficulty == EPassableDifficulty.Low)
+            {
+                passableDifficulty = GameBlackBoard.CELL_PASSABLE_DIFFICULTY_ADD_PER_CHARACTER_LOW;
+            }
+
+            cell.SetPassableDifficulty(cell.PassableDifficulty + passableDifficulty);
         }
+    }
+
+    public void SetPassableDifficulty(EPassableDifficulty difficulty)
+    {
+        m_PassableDifficulty = difficulty;
     }
     
 }

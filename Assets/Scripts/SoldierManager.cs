@@ -19,49 +19,19 @@ public class SoldierManager : MonoSingleton<SoldierManager>
     public float PosInterval;
     public int NumPerLine;
 
-    private List<SceneObjController> m_SoldierList = new List<SceneObjController>();
+    private List<EntityBaseController> m_CharacterList = new List<EntityBaseController>();
     private string Enemy_Resource_Path = "Enemy";
 
     public void CreateSoldiers()
     {
-        GameObject enemy = Instantiate(Resources.Load(Enemy_Resource_Path, typeof(GameObject)), transform) as GameObject;
-        enemy.transform.position = new Vector2(Random.Range(0, 20), Random.Range(0, 20));
-        for (int i = 0; i < NumOfSoldiers; i++){
-            GameObject soldier = Instantiate(SoldierResource, transform) as GameObject;
-            soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
-
-            FollowController followController = soldier.GetComponent<FollowController>();
-
-            if (followController == null)
-                return;
-
-            followController.SetFollowTarget(FollowTarget);
-            followController.SetPosition(soldier.transform.position);
-            
-            m_SoldierList.Add(followController);
-            if (i == 0)
-            {
-                // temp: pursuit the first soldier
-                var soldierCtrl = soldier.GetComponent<FollowController>();
-                if (soldierCtrl && soldierCtrl is IEntity)
-                {
-                    var enemyCtrl =enemy.GetComponent<EnemyController>();
-                    if (enemyCtrl != null)
-                    {
-                        enemyCtrl.FollowTarget = soldierCtrl;
-                    }
-                }
-            }
-        }
-        
-
+        CreateSoldier();
+        CreateEnemy();
     }
 
     public void CreateSoldier()
     {
         GameObject soldier = Instantiate(SoldierResource, transform) as GameObject;
-        int i = Random.Range(0, 20);
-        soldier.transform.Translate(new Vector2(i % NumPerLine, i / NumPerLine) * PosInterval);
+        soldier.transform.position = new Vector2(Random.Range(0, 20), Random.Range(0, 20));
 
         FollowController followController = soldier.GetComponent<FollowController>();
 
@@ -71,11 +41,33 @@ public class SoldierManager : MonoSingleton<SoldierManager>
         followController.SetFollowTarget(FollowTarget);
         followController.SetPosition(soldier.transform.position);
 
-        m_SoldierList.Add(followController);
+        m_CharacterList.Add(followController);
     }
 
-    public List<SceneObjController> GetCharacters()
+    public void CreateEnemy()
     {
-        return m_SoldierList;
+        GameObject enemy = Instantiate(Resources.Load(Enemy_Resource_Path, typeof(GameObject)), transform) as GameObject;
+        enemy.transform.position = new Vector2(Random.Range(0, 20), Random.Range(0, 20));
+
+        EnemyController enemyController = enemy.GetComponent<EnemyController>();
+
+        if (enemyController == null)
+            return;
+
+        enemyController.SetPosition(enemy.transform.position);
+
+        m_CharacterList.Add(enemyController);
+
+
+        var enemyCtrl = enemy.GetComponent<EnemyController>();
+        if (enemyCtrl != null)
+        {
+            enemyCtrl.FollowTarget = m_CharacterList.Find((item) => item is FollowController);
+        }
+    }
+
+    public List<EntityBaseController> GetCharacters()
+    {
+        return m_CharacterList;
     }
 }

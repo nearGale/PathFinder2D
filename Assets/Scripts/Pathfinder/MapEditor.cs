@@ -31,6 +31,9 @@ public class MapEditor : MonoBehaviour {
     public Button clearBtn;
     public Button randomBlockBtn;
     public Button addChaserBtn;
+    public Button highGvalBtn;
+    public Button mediumGvalBtn;
+    public Button lowGvalBtn;
 
     private int m_StartCellId;
     private int m_EndCellId;
@@ -86,6 +89,24 @@ public class MapEditor : MonoBehaviour {
         );
         addChaserBtn.onClick.AddListener(
             () => SoldierManager.Instance.CreateSoldier()
+        );
+        highGvalBtn.onClick.AddListener(
+            () =>
+            {
+                CellManager.Instance.SetPassableDifficulty(EPassableDifficulty.High);
+            }
+        );
+        mediumGvalBtn.onClick.AddListener(
+            () =>
+            {
+                CellManager.Instance.SetPassableDifficulty(EPassableDifficulty.Medium);
+            }
+        );
+        lowGvalBtn.onClick.AddListener(
+            () =>
+            {
+                CellManager.Instance.SetPassableDifficulty(EPassableDifficulty.Low);
+            }
         );
     }
 
