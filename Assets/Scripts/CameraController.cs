@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        Screen.SetResolution(1920, 1080, true);
         moveDir = Vector3.zero;
     }
 
@@ -39,6 +40,15 @@ public class CameraController : MonoBehaviour
                 MessageManager.Instance.Do(Event.ClickOnCell, cell.ID, hit.point);
             }
         }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            Camera.main.orthographicSize += 1;
+        }
+        //Zoom in
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            Camera.main.orthographicSize -= 1;
+        }
     }
 
     private void HandleKeyInput()
@@ -64,6 +74,12 @@ public class CameraController : MonoBehaviour
         {
             moveDir += Vector3.right;
         }
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            UnityEngine.Application.Quit();
+        }
+
 
         moveDir = moveDir.normalized;
 

@@ -31,6 +31,7 @@ public class MapEditor : MonoBehaviour {
     public Button clearBtn;
     public Button randomBlockBtn;
     public Button addChaserBtn;
+    public Button addEnemyBtn;
     public Button highGvalBtn;
     public Button mediumGvalBtn;
     public Button lowGvalBtn;
@@ -89,6 +90,9 @@ public class MapEditor : MonoBehaviour {
         );
         addChaserBtn.onClick.AddListener(
             () => SoldierManager.Instance.CreateSoldier()
+        );
+        addEnemyBtn.onClick.AddListener(
+            () => SoldierManager.Instance.CreateEnemy()
         );
         highGvalBtn.onClick.AddListener(
             () =>

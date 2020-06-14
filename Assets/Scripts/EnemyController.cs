@@ -53,7 +53,15 @@ public class EnemyController : EntityBaseController
         }
     }
 
-    
+    public void SetFollowTarget(IEntity followTarget)
+    {
+        FollowTarget = followTarget;
+        if (FollowTarget != null)
+        {
+            followTargetController = FollowTarget.GetHostGameObject().GetComponent<SceneObjController>();
+        }
+    }
+
     private bool CheckNeedFollow()
     {
         bool needFollow = false;

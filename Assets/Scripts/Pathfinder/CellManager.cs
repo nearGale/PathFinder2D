@@ -67,7 +67,7 @@ public class CellManager : Singleton<CellManager> {
 
         foreach(var cell in cells)
         {
-            cell.SetPassableDifficulty(0);
+            cell.ResetPassableDifficulty();
         }
 
         foreach (var character in characters)

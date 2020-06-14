@@ -39,6 +39,10 @@ public abstract class BaseCell : MonoBehaviour {
     public void SetParent(int parentCell) {
         parentID = parentCell;
     }
+    public void ResetPassableDifficulty()
+    {
+        PassableDifficulty = 1;
+    }
 
     public void SetPassableDifficulty(float difficulty)
     {

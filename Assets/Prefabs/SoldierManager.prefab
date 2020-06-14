@@ -43,10 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1dc1349d8804004b843f92421af0b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumOfSoldiers: 4
+  NumOfSoldiers: 1
   followType: 0
   SoldierResource: {fileID: 7773977073357550076, guid: 9d045cd1514b1674baaa618724160c6e,
     type: 3}
-  FollowTarget: {fileID: 0}
+  GeneralResource: {fileID: 6554665302617839751, guid: 273fcebaf559710418dce33fa3527030,
+    type: 3}
   PosInterval: 1
   NumPerLine: 3

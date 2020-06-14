@@ -14,7 +14,8 @@ public class SoldierManager : MonoSingleton<SoldierManager>
     public int NumOfSoldiers;
     public EFollowType followType;
     public Object SoldierResource;
-    public Transform FollowTarget;
+    public Object GeneralResource;
+    private Transform FollowTarget;
     
     public float PosInterval;
     public int NumPerLine;
@@ -24,8 +25,26 @@ public class SoldierManager : MonoSingleton<SoldierManager>
 
     public void CreateSoldiers()
     {
+        CreateGeneral();
         CreateSoldier();
         CreateEnemy();
+    }
+
+    private void CreateGeneral()
+    {
+        GameObject general = Instantiate(GeneralResource, transform) as GameObject;
+        general.transform.position = new Vector2(Random.Range(0, 20), Random.Range(0, 20));
+
+        WalkController walkController = general.GetComponent<WalkController>();
+
+        if (walkController == null)
+            return;
+
+        walkController.SetPosition(general.transform.position);
+
+        m_CharacterList.Add(walkController);
+
+        FollowTarget = general.transform;
     }
 
     public void CreateSoldier()
@@ -62,7 +81,12 @@ public class SoldierManager : MonoSingleton<SoldierManager>
         var enemyCtrl = enemy.GetComponent<EnemyController>();
         if (enemyCtrl != null)
         {
-            enemyCtrl.FollowTarget = m_CharacterList.Find((item) => item is FollowController);
+            IEntity followTarget = m_CharacterList.Find((item) => item is FollowController);
+            if (followTarget == null)
+            {
+                followTarget = m_CharacterList.Find((item) => item is WalkController);
+            }
+            enemyCtrl.SetFollowTarget(followTarget);
         }
     }
 
