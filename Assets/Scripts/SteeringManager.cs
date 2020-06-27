@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Application
@@ -93,6 +94,82 @@ namespace Application
  
             force = desired - host.GetVelocity();
  
+            return force;
+        }
+
+        public void Arrive(IEntity pawn, IEntity target)
+        {
+            Steering += DoArrive(pawn, target);
+        }
+
+        Vector2 DoArrive(IEntity pawn, IEntity target, float slowDownDistance = 1f, float arrivalDistance = 0.3f)
+        {
+            Vector2 force = Vector2.zero;
+            Vector2 desiredVelocity;
+            Vector2 toTarget = target.GetPosition() - pawn.GetPosition();
+            float distance = toTarget.magnitude;
+            if (distance > slowDownDistance)
+            {
+                //预期速度是pawn与leader之间的距离
+                desiredVelocity = toTarget.normalized * host.GetMaxVelocity();
+                force = desiredVelocity - pawn.GetVelocity();
+            }
+            else
+            {
+                //计算预期速度 返回预期速度和当前速度的差
+                desiredVelocity = toTarget - pawn.GetVelocity();
+                //返回预期速度和当前速度差
+                force = desiredVelocity - pawn.GetVelocity();
+            }
+            return force;
+        }
+
+
+
+        public void Evade(IEntity pawn, IEntity target)
+        {
+            Steering += DoEvade(pawn, target);
+        }
+
+        Vector2 DoEvade(IEntity pawn, IEntity target)
+        {
+            Vector2 force = Vector2.zero;
+            Vector2 desiredVelocity;
+            Vector3 toTarget = target.GetPosition() - pawn.GetPosition();
+            //向前预测的时间
+            float lookaheadTime = toTarget.magnitude / (host.GetMaxVelocity() + target.GetVelocity().magnitude);
+            //计算预期速度
+            desiredVelocity = (pawn.GetPosition() -
+                               (pawn.GetPosition() + target.GetVelocity() * lookaheadTime)).normalized * host.GetMaxVelocity();
+            return (desiredVelocity - pawn.GetVelocity());
+        }
+
+        public void Separate(CheckAroundEntityController pawn, List<CheckAroundEntityController> neighbors)
+        {
+            Steering += DoSparate(pawn, neighbors);
+        }
+        public float multiplierInsideDistance = 2;//pawn距离过近的限制距离
+        public float comfortDistance = 1;//可接受距离
+
+        Vector2 DoSparate(CheckAroundEntityController pawn, List<CheckAroundEntityController> neighbors)
+        {
+            Vector2 force = new Vector2(0, 0);
+            //遍历全部邻居
+            foreach (var n in neighbors)
+            {
+                //检测排除当前entity
+                if ((n != null) && (n.Entity != pawn.Entity))
+                {
+                    //计算当前角色和邻居之间的距离
+                    Vector2 toNeighbor = pawn.Entity.GetPosition() - n.Entity.GetPosition();
+                    float length = toNeighbor.magnitude;
+                    //计算这个邻居引起的操控力(排斥力) 大小和距离成反比
+                    force += toNeighbor.normalized / length;
+                    //如果二者之间距离大于可接受的范围，排斥力再乘以一个限制距离
+                    if (length < comfortDistance)
+                        force *= multiplierInsideDistance;
+                }
+            }
             return force;
         }
 
