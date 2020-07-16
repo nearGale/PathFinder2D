@@ -11,13 +11,19 @@ public class FollowController : EntityBaseController
     private WalkState m_State;
 
     private bool m_PathfindingRequested;
-
+    private CheckAroundEntityController m_CheckAroundController;
     protected override void OnStart()
     {
         base.OnStart();
         if(FollowTarget!= null){
             followTargetController = FollowTarget.GetComponent<SceneObjController>();
         }
+        
+
+        m_CheckAroundController = GetComponent<CheckAroundEntityController>();
+        if (m_CheckAroundController == null)
+            m_CheckAroundController = gameObject.AddComponent<CheckAroundEntityController>();
+
         m_MoveSpeed_Max = 0.1f;
         m_ForceSteer_Max = 1f;
 
@@ -68,6 +74,7 @@ public class FollowController : EntityBaseController
             //
             Vector2 targetPos = GetNextTargetPos();
             m_Steering.Seek(targetPos);
+            m_Steering.Separate(m_CheckAroundController , m_CheckAroundController.neighbors);
             //m_Steering.Wander();
             m_Steering.CollisionAvoidance();
             m_Steering.Update();

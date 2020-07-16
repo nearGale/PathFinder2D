@@ -11,7 +11,7 @@ public class CheckAroundEntityController : MonoBehaviour
     //计时器
     private float timer = 0;
     //邻居列表
-    public List<GameObject> neighbors;
+    public List<CheckAroundEntityController> neighbors;
     //时间间隔
     public float checkInterval = 0.3f;
     //自身领域半径
@@ -23,7 +23,7 @@ public class CheckAroundEntityController : MonoBehaviour
     void Start()
     {
         //初始化邻居列表
-        neighbors = new List<GameObject>();
+        neighbors = new List<CheckAroundEntityController>();
     }
 
 
@@ -41,8 +41,9 @@ public class CheckAroundEntityController : MonoBehaviour
                                                                                 //对于每个检测到的碰撞体，加入邻居列表
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (colliders[i].GetComponent<IEntity>() != null)
-                    neighbors.Add(colliders[i].gameObject);
+                var item = colliders[i].GetComponent<CheckAroundEntityController>();
+                if (item != null)
+                    neighbors.Add(item);
             }
 
             timer = 0;

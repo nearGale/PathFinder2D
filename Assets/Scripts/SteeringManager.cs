@@ -51,10 +51,10 @@ namespace Application
             VectorHandler.Truncate(ref tempSteering, m_ForceSteer_Max);
             Steering = tempSteering;
             Steering *= 1 / host.GetMass();
- 
+
             v = v + Steering;
             VectorHandler.Truncate(ref v, host.GetMaxVelocity());
- 
+
             host.SetVelocity(v);
             host.SetPosition(pos + v);
         }
@@ -78,22 +78,22 @@ namespace Application
         /// <returns></returns>
         private Vector2 DoSeek(Vector2 target, float slowingRadius = 1f)
         {
-            Vector2 force ;
+            Vector2 force;
             float distance;
- 
-           var desired = target - host.GetPosition();
- 
+
+            var desired = target - host.GetPosition();
+
             distance = desired.magnitude;
             desired.Normalize();
- 
+
             if (distance <= slowingRadius) {
-                desired *= host.GetMaxVelocity() * distance/slowingRadius;
+                desired *= host.GetMaxVelocity() * distance / slowingRadius;
             } else {
                 desired *= host.GetMaxVelocity();
             }
- 
+
             force = desired - host.GetVelocity();
- 
+
             return force;
         }
 
@@ -146,6 +146,7 @@ namespace Application
 
         public void Separate(CheckAroundEntityController pawn, List<CheckAroundEntityController> neighbors)
         {
+            if (pawn == null || neighbors.Count <= 0) return;
             Steering += DoSparate(pawn, neighbors);
         }
         public float multiplierInsideDistance = 2;//pawn距离过近的限制距离
