@@ -4,7 +4,3 @@
 /PathFinder2D/Temp
 /PathFinder2D/.git
 /PathFinder2D/.vs
-!/Assets
-!/ProjectSettings
-!/Packages
-*.meta
